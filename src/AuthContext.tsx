@@ -5,6 +5,7 @@ import {
   useEffect,
   type ReactNode,
 } from "react";
+import { apiUrl } from "./api";
 
 type AuthUser = {
   id: number;
@@ -41,7 +42,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   async function login(email: string, password: string) {
-    const res = await fetch("http://localhost:4000/api/auth/login", {
+    const res = await fetch(apiUrl("/api/auth/login"), {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password }),
@@ -53,7 +54,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const data = await res.json(); // { token, user }
     setToken(data.token);
     setUser(data.user);
-    localStorage.setItem("auth", JSON.stringify({ token: data.token, user: data.user }));
+    localStorage.setItem(
+      "auth",
+      JSON.stringify({ token: data.token, user: data.user })
+    );
   }
 
   function logout() {
